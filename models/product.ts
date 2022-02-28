@@ -2,12 +2,12 @@ import { productsIndex } from "db/algolia";
 import { airtableBase } from "db/airtable";
 
 export class Product {
-  index = productsIndex;
-  base = airtableBase;
+  static index = productsIndex;
+  static base = airtableBase;
   id: string;
   data: any;
-  constructor(id) {
+  constructor(id: string) {
     this.id = id;
-    this.data = this.index.getObject(this.id);
+    this.data = Product.index.getObject(this.id);
   }
 }

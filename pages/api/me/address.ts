@@ -10,22 +10,13 @@ async function getHandler(
   decodedToken: tokenData
 ) {
   try {
-    const data = await UsersController.getUserBy(decodedToken.userId);
-    await send(res, 200, data);
-  } catch (error) {
-    await send(res, 404, error);
-  }
-}
-async function patchHandler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-  decodedToken: tokenData
-) {
-  const changes = req.body;
-  try {
-    const data = await UsersController.updateUserData(
+    const { address, newValue } = req.body;
+    if (!address || !newValue)
+      send(res, 400, { message: "address and newValue is required" });
+    const data = await UsersController.updateAdressUserData(
       decodedToken.userId,
-      changes
+      address,
+      newValue
     );
     await send(res, 200, data);
   } catch (error) {
@@ -34,8 +25,7 @@ async function patchHandler(
 }
 
 const handlers = methods({
-  get: getHandler,
-  patch: patchHandler,
+  patch: getHandler,
 });
 
 export default authMiddleware(handlers);

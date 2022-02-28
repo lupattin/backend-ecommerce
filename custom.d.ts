@@ -3,4 +3,4 @@ declare type minimalAuthUserData = {
   email: string;
 };
 
-declare type tokenData = { userId: number; iat: number; email: string };
+declare type tokenData = { userId: string; iat: number; email: string };

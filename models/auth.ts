@@ -6,7 +6,7 @@ export class Auth {
   ref: FirebaseFirestore.DocumentReference;
   data: any;
   id: string;
-  constructor(id) {
+  constructor(id: string) {
     this.id = id;
     this.ref = collection.doc(id);
   }
