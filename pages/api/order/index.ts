@@ -28,7 +28,7 @@ const handler = async (
       details,
       decodedToken
     );
-    send(res, 201, { paymentURL: newOrder });
+    send(res, 201, { newOrder });
   } catch (error) {
     send(res, 402, { error });
   }

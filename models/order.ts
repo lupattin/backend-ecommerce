@@ -19,7 +19,7 @@ export class Order {
   async push(): Promise<void> {
     this.ref.update(this.data);
   }
-  static async createNewOrder(data): Promise<Order> {
+  static async createNewOrder(data: any): Promise<Order> {
     const newOrderSnap = await collection.add(data);
     const newOrder = new Order(newOrderSnap.id);
     newOrder.data = data;

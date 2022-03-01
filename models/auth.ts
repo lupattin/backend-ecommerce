@@ -10,28 +10,36 @@ export class Auth {
     this.id = id;
     this.ref = collection.doc(id);
   }
-  async pull() {
+  async pull(): Promise<void> {
     const snap = await this.ref.get();
     this.data = snap.data();
   }
-  async push() {
+  async push(): Promise<void> {
     this.ref.update(this.data);
   }
   static async findByEmail(cleanEmail: string): Promise<Auth> {
-    const results = await collection.where("email", "==", cleanEmail).get();
-    if (results.docs.length) {
-      const first = results.docs[0];
-      const newAuth = new Auth(first.id);
-      newAuth.data = first.data();
-      return newAuth;
-    } else {
-      return null;
+    try {
+      const results = await collection.where("email", "==", cleanEmail).get();
+      if (results.docs.length) {
+        const first = results.docs[0];
+        const auth = new Auth(first.id);
+        auth.data = first.data();
+        return auth;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      throw error;
     }
   }
-  static async createNewAuth(data): Promise<Auth> {
-    const newAuthSnap = await collection.add(data);
-    const newAuth = new Auth(newAuthSnap.id);
-    newAuth.data = data;
-    return newAuth;
+  static async createNewAuth(data: any): Promise<Auth> {
+    try {
+      const newAuthSnap = await collection.add(data);
+      const newAuth = new Auth(newAuthSnap.id);
+      newAuth.data = data;
+      return newAuth;
+    } catch (error) {
+      throw error;
+    }
   }
 }

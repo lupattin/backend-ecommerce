@@ -1,4 +1,4 @@
-import { createOrder, getMerchantOrder } from "lib/mercadopago";
+import { createMPPreference, getMerchantOrder } from "lib/mercadopago";
 import { Order } from "models/order";
 import { productsController } from "./products";
 import { UsersController } from "./users";
@@ -20,8 +20,8 @@ export const orderControllers = {
       });
       await newOrder.pull();
       await UsersController.assignOrder(newOrder.id, user.userId);
-      const order = await createOrder(newOrder);
-      return order;
+      const paymentURL = await createMPPreference(newOrder);
+      return { paymentURL, orderId: newOrder.id };
     } catch (error) {
       console.log(error);
       throw error;

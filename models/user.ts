@@ -12,14 +12,14 @@ export class User {
     this.id = id;
     this.ref = collection.doc(id);
   }
-  async pull() {
+  async pull(): Promise<void> {
     const snap = await this.ref.get();
     this.data = snap.data();
   }
-  async push() {
+  async push(): Promise<void> {
     this.ref.update(this.data);
   }
-  static async createNewUser(data): Promise<User> {
+  static async createNewUser(data: any): Promise<User> {
     const newUserSnap = await collection.add(data);
     const newUser = new User(newUserSnap.id);
     newUser.data = data;

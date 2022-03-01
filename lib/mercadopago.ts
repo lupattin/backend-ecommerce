@@ -9,7 +9,7 @@ export async function getMerchantOrder(id) {
   return res.response;
 }
 
-export async function createOrder(obj) {
+export async function createMPPreference(obj) {
   const preference = {
     items: obj.data.products.map((item) => {
       return {

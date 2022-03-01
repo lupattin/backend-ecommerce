@@ -67,6 +67,8 @@ export const AuthController: any = {
       const date: Date = auth.data.expires.toDate();
 
       if (isFuture(date) && auth.data.code == code) {
+        auth.data.code = null;
+        auth.push();
         return { userId: auth.data.userId, email: auth.data.email };
       } else return null;
     } catch (error) {
