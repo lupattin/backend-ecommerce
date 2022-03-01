@@ -2,6 +2,7 @@ import { createOrder, getMerchantOrder } from "lib/mercadopago";
 import { Order } from "models/order";
 import { productsController } from "./products";
 import { UsersController } from "./users";
+import { sendPaymentApprovedByEmail } from "lib/sendgrid";
 
 export const orderControllers = {
   async newOrder(
@@ -33,6 +34,42 @@ export const orderControllers = {
       return order.data;
     } catch (error) {
       throw error;
+    }
+  },
+  async recordOrder(order) {
+    Order.base("Client orders").create(
+      [
+        {
+          fields: {
+            Client: order.data.user.userId,
+            "Order no.": order.id,
+            Status: order.data.state,
+            "Total order cost": order.data.payments.total_paid_amount,
+          },
+        },
+      ],
+      function (err, records) {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        return records.map((record) => {
+          return record.getId();
+        });
+      }
+    );
+  },
+  async processMerchantOrder(id): Promise<void> {
+    const merchantOrder = await getMerchantOrder(id);
+    if (merchantOrder.order_status == "paid") {
+      const orderId = merchantOrder.external_reference;
+      const order = await new Order(orderId);
+      await order.pull();
+      order.data.payments = merchantOrder.payments[0];
+      order.data.status = "closed";
+      await order.push();
+      await sendPaymentApprovedByEmail(order.data.user.email);
+      await this.recordOrder(order);
     }
   },
 };

@@ -1,8 +1,10 @@
 import { firestore } from "db/firestore";
 const collection: FirebaseFirestore.CollectionReference =
   firestore.collection("orders");
+import { airtableBase } from "db/airtable";
 
 export class Order {
+  static base = airtableBase;
   ref: FirebaseFirestore.DocumentReference;
   data: any;
   id: string;
