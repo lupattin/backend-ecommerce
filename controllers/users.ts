@@ -40,4 +40,15 @@ export const UsersController = {
       throw error;
     }
   },
+  async assignOrder(orderId: string, userId: string) {
+    try {
+      const user: User = await new User(userId);
+      await user.pull();
+      user.data.orders = [...user.data.orders, orderId];
+      await user.push();
+      return user.data.orders;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

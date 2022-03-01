@@ -7,6 +7,7 @@ export class User {
   ref: any;
   data: any;
   id: string;
+  orders: string[] = [];
   constructor(id: string) {
     this.id = id;
     this.ref = collection.doc(id);

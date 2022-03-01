@@ -7,32 +7,33 @@ Este endpoint debe responder con la URL a donde debemos redirigir al user.
 */
 
 import type { NextApiRequest, NextApiResponse } from "next";
-import { productsIndex } from "db/algolia";
 import authMiddleware from "middlewares/authMiddleware";
-import { Order } from "models/order";
-import { createOrder } from "lib/mercadopago";
+import { orderControllers } from "controllers/orders";
+const { send } = require("micro");
+const methods = require("micro-method-router");
 
 const handler = async (
   req: NextApiRequest,
   res: NextApiResponse,
   decodedToken
 ) => {
-  if (!req.query.productId) res.send(404);
-
-  const { details } = req.body;
-  const queries = Array.isArray(req.query.productId)
-    ? req.query.productId
-    : [req.query.productId];
-  const { results } = await productsIndex.getObjects(queries);
-
-  const newOrder = await Order.createNewOrder({
-    details,
-    products: results,
-    user: decodedToken,
-  });
-  newOrder.pull();
-
-  const order = await createOrder(newOrder);
-  res.send({ order }); //aca tiene que devolver solo la direccion de pago
+  try {
+    if (!req.query.productId) res.send(404);
+    const { details } = req.body;
+    const queries = Array.isArray(req.query.productId)
+      ? req.query.productId
+      : [req.query.productId];
+    const newOrder = await orderControllers.newOrder(
+      queries,
+      details,
+      decodedToken
+    );
+    send(res, 201, { paymentURL: newOrder });
+  } catch (error) {
+    send(res, 402, { error });
+  }
 };
-export default authMiddleware(handler);
+const handlers = methods({
+  post: handler,
+});
+export default authMiddleware(handlers);

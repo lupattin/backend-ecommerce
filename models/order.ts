@@ -23,14 +23,4 @@ export class Order {
     newOrder.data = data;
     return newOrder;
   }
-
-  static async findById(id): Promise<any> {
-    try {
-      const order = await collection.doc(id);
-      const snap = await order.get();
-      return snap.data;
-    } catch (error) {
-      throw { message: error };
-    }
-  }
 }

@@ -15,4 +15,18 @@ export const productsController = {
       },
     };
   },
+  async getProduct(id) {
+    const product = await new Product(id);
+    if (product.data.status == 404) {
+      return {
+        status: product.data.status,
+        message: product.data.message,
+      };
+    } else {
+      return product.data;
+    }
+  },
+  async getProductsByIds(queries: string[]) {
+    return Product.index.getObjects(queries);
+  },
 };

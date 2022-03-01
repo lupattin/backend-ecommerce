@@ -24,26 +24,23 @@ export async function createOrder(obj) {
       };
     }),
     back_urls: {
-      success: "https://apx.school",
-      failure: "https://google.com",
-      pending: "https://apx.school/dwf",
+      success: process.env.BASE_URL,
+      failure: process.env.BASE_URL,
+      pending: process.env.BASE_URL,
     },
     external_reference: obj.id,
-    notification_url:
-      "https://webhook.site/3f695934-e3ca-4e3d-acd2-cb2c66b6db0a",
+    notification_url: process.env.IPN_WH_ADDRESS,
   };
-  // const order = await mercadopago.preference.createOrder(preference);
 
-  const order = await mercadopago.preferences.create(preference);
-  // await (
-  //   await fetch("https://api.mercadopago.com/checkout/preferences", {
-  //     headers: {
-  //       authorization: "Bearer " + process.env.MP_TOKEN,
-  //       "Content-Type": "application/json",
-  //     },
-  //     method: "POST",
-  //     body: JSON.stringify(preference),
-  //   })
-  // ).json();
-  return order;
+  const order = await (
+    await fetch("https://api.mercadopago.com/checkout/preferences", {
+      headers: {
+        authorization: "Bearer " + process.env.MP_TOKEN,
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(preference),
+    })
+  ).json();
+  return order.init_point;
 }
