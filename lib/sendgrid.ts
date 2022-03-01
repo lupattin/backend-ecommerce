@@ -81,7 +81,7 @@ export async function sendPaymentApprovedByEmail(to: string) {
   return await sgMail.send({
     to, // Change to your recipient
     from: "marcosreuquendiaz@gmail.com", // Change to your verified sender
-    subject: `Hemos recibido tu pago`,
+    subject: `Your order has been confirmed`,
     html: `
 <!DOCTYPE html>
 <html>
@@ -124,7 +124,7 @@ export async function sendPaymentApprovedByEmail(to: string) {
     <div>
       <h1 style="text-align: center">Hello!</h1>
       <h2 style="text-align: center">
-      gracias por comprar en nuestro ecommerce</h2>
+      Thank you for choosing us...</h2>
     </div>
     <div>
       <h1 style="text-align: center; margin-top: 50px; margin-bottom: 50px">
@@ -137,7 +137,8 @@ export async function sendPaymentApprovedByEmail(to: string) {
           "
         >
           <strong>
-          ¡Recibimos tu compra exitosamente!</strong>
+          Your order has been confirmed and it will arrive soon!
+          </strong>
         </span>
       </h1>
     </div>
