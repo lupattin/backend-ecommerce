@@ -44,7 +44,9 @@ export const UsersController = {
     try {
       const user: User = await new User(userId);
       await user.pull();
-      user.data.orders = [...user.data.orders, orderId];
+      user.data.orders = user.data.orders
+        ? [...user.data.orders, orderId]
+        : [orderId];
       await user.push();
       return user.data.orders;
     } catch (error) {
