@@ -7,12 +7,13 @@ export default function authMiddleware(cb: Function) {
     const token = parseToken(req);
     if (!token) {
       res.status(401).send({ message: "there's no token" });
-    }
-    const decodedToken: tokenData = decode(token);
-    if (decodedToken) {
-      cb(req, res, decodedToken);
     } else {
-      res.status(401).send({ message: "token not signed" });
+      const decodedToken: tokenData = decode(token);
+      if (decodedToken) {
+        cb(req, res, decodedToken);
+      } else {
+        res.status(401).send({ message: "token not signed" });
+      }
     }
   };
 }
