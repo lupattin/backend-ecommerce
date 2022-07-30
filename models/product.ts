@@ -8,6 +8,16 @@ export class Product {
   data: any;
   constructor(id: string) {
     this.id = id;
-    this.data = Product.index.getObject(this.id);
+    // this.data = Product.index.getObject(this.id);
+  }
+
+  /**
+   * getData
+   */
+  public async getData() {
+    if (!this.data) {
+      this.data = await Product.index.getObject(this.id);
+    }
+    return this.data;
   }
 }

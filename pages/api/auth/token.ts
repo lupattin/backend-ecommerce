@@ -3,6 +3,7 @@ import { generate } from "lib/jwt";
 import { AuthController } from "controllers/auth";
 import * as yup from "yup";
 import { validateBodySchema } from "middlewares/validateSchema";
+import corsMiddleware from "middlewares/corsMiddleware";
 
 const bodySchema = yup
   .object()
@@ -18,6 +19,7 @@ const handler: Function = async function (
   res: NextApiResponse
 ) {
   try {
+    console.log(req.body);
     const { email, code } = req.body;
     const data: minimalAuthUserData =
       await AuthController.checkCodeAndExpiration(email, code);
@@ -29,4 +31,8 @@ const handler: Function = async function (
   }
 };
 
-export default validateBodySchema(bodySchema, handler);
+const corsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+  await corsMiddleware(req, res, validateBodySchema(bodySchema, handler));
+};
+
+export default corsHandler;

@@ -17,7 +17,7 @@ export const AuthController: any = {
     try {
       const auth: Auth = await Auth.findByEmail(cleanEmail);
       if (auth) {
-        auth.pull();
+        auth.pull(); //TODO delete pulls
         return { userId: auth.data.userId, email: auth.data.email };
       } else {
         const newUser: User = await User.createNewUser({ email: cleanEmail });

@@ -17,6 +17,7 @@ export const productsController = {
   },
   async getProduct(id) {
     const product = await new Product(id);
+    await product.getData();
     if (product.data.status == 404) {
       return {
         status: product.data.status,
@@ -27,6 +28,15 @@ export const productsController = {
     }
   },
   async getProductsByIds(queries: string[]) {
-    return Product.index.getObjects(queries);
+    return await Product.index.getObjects(queries);
+  },
+  async getFeaturedProducts() {
+    const { hits, nbHits } = await Product.index.search("", {
+      offset: 0,
+      length: 4,
+    });
+    return {
+      results: hits,
+    };
   },
 };

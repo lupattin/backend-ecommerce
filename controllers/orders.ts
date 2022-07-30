@@ -16,7 +16,7 @@ export const orderControllers = {
         details,
         products: results,
         user,
-        state: "pending",
+        status: "pending",
       });
       await newOrder.pull();
       await UsersController.assignOrder(newOrder.id, user.userId);

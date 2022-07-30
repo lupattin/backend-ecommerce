@@ -3,6 +3,7 @@ import { AuthController } from "controllers/auth";
 const { send } = require("micro");
 const methods = require("micro-method-router");
 import * as yup from "yup";
+import corsMiddleware from "middlewares/corsMiddleware";
 import { validateBodySchema } from "middlewares/validateSchema";
 
 const bodySchema = yup
@@ -34,6 +35,8 @@ const handlers = methods({
   post: postHandler,
 });
 
-export default validateBodySchema(bodySchema, handlers);
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  await corsMiddleware(req, res, validateBodySchema(bodySchema, handlers));
+};
 
 //POST /auth - Recibe un body con un email. Utiliza este email para encontrar/crear un registro auth. En el caso de que tenga que crear el registro de la collection/tabla auth también crea el registro user correspondiente. Genera un código con fecha de vencimiento y le envía el código por email (usando sendgrid) al user que haya solicitado autenticarse.

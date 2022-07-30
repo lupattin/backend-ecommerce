@@ -8,6 +8,7 @@ Este endpoint debe responder con la URL a donde debemos redirigir al user.
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import authMiddleware from "middlewares/authMiddleware";
+import corsMiddleware from "middlewares/corsMiddleware";
 import { orderControllers } from "controllers/orders";
 const { send } = require("micro");
 const methods = require("micro-method-router");
@@ -18,6 +19,7 @@ const handler = async (
   decodedToken
 ) => {
   try {
+    console.log("order");
     if (!req.query.productId) res.send(404);
     const { details } = req.body;
     const queries = Array.isArray(req.query.productId)
@@ -28,6 +30,7 @@ const handler = async (
       details,
       decodedToken
     );
+    console.log({ newOrder });
     send(res, 201, { newOrder });
   } catch (error) {
     send(res, 402, { error });
@@ -36,4 +39,7 @@ const handler = async (
 const handlers = methods({
   post: handler,
 });
-export default authMiddleware(handlers);
+
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  await corsMiddleware(req, res, authMiddleware(handlers));
+};
