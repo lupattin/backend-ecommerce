@@ -24,9 +24,9 @@ export async function createMPPreference(obj) {
       };
     }),
     back_urls: {
-      success: process.env.BASE_URL,
-      failure: process.env.BASE_URL,
-      pending: process.env.BASE_URL,
+      success: process.env.SUCCESS_URL,
+      failure: process.env.FAILURE_URL,
+      pending: process.env.PENDING_URL,
     },
     external_reference: obj.id,
     notification_url: process.env.IPN_WH_ADDRESS,
